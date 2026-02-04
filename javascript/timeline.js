@@ -1,20 +1,21 @@
 const timeline = []
 
 timeline.push(
-  redirect_trial,
-  id_trial,
-  // consent screen and branch: if participant does not consent, show thank-you and end
-  consent_trial,
-  nonconsent_flow,
-  instructions,
-  examples_intro,
+//   redirect_trial,
+//   id_trial,
+//   consent_trial,
+//   nonconsent_flow,
+//   instructions,
+//   examples_intro,
   practice_block,
   start_trial,
-  video_block,
+  actual_block1,
+  actual_break,
+  actual_block2,
+  questionnaires_intro,
   tellegen_instruction,
   tellegen_trial,
-  // vviq_trials is an array containing the instruction + 8 likert blocks
-  ...vviq_trials,
+//   ...vviq_trials,
   closing
 )
 

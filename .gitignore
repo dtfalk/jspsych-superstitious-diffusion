@@ -1,2 +1,6 @@
-**/node_modules
+**/node_modules/**
 **/*.zip
+**/variations/**
+**/generate-videos.py
+**/**train_emnist.py
+**/edit-notes.txt

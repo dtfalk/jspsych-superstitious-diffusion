@@ -1,7 +1,7 @@
 const tellegen_questions = [
-  { prompt: 'Sometimes I feel and experience things as I did when I was a child.', options: ['True', 'False'] },
-  { prompt: 'I can be greatly moved by eloquent or poetic language.', options: ['True', 'False'] },
-  { prompt: 'While watching a movie, a T.V. show, or a play, I may become so involved that I forget about myself and my surroundings and experience the story as if I were taking part in it.', options: ['True', 'False'] },
+  { prompt: 'Sometimes I feel and experience things as I did when I was a child.', options: ['True', 'False'], required: true },
+  { prompt: 'I can be greatly moved by eloquent or poetic language.', options: ['True', 'False'], required: true },
+  { prompt: 'While watching a movie, a T.V. show, or a play, I may become so involved that I forget about myself and my surroundings and experience the story as if I were taking part in it.', options: ['True', 'False'], required: true },
   { prompt: 'If I stare at a picture and then look away from it, I can sometimes “see” an image of the picture, almost as if I were looking at it.', options: ['True', 'False'] },
   { prompt: 'Sometimes I feel as if my mind could envelop the whole world.', options: ['True', 'False'] },
   { prompt: 'I like to watch cloud shapes change in the sky.', options: ['True', 'False'] },
@@ -32,16 +32,25 @@ const tellegen_questions = [
   { prompt: 'At times I somehow feel the presence of someone who is not physically there.', options: ['True', 'False'] },
   { prompt: 'Sometimes thoughts and images come to me without the slightest effort on my part.', options: ['True', 'False'] },
   { prompt: 'I find that different odors have different colors.', options: ['True', 'False'] },
-  { prompt: 'I can be deeply moved by a sunset.', options: ['True', 'False'] }
+  { prompt: 'I can be deeply moved by a sunset.', options: ['True', 'False'], required: true }
 ];
 
 const tellegen_trial = {
   type: jsPsychSurveyMultiChoice,
-  questions: tellegen_questions
+  questions: tellegen_questions,
+  randomize_question_order: false
 };
 
-// Intro text for Tellegen (from user)
-const telleganScaleText = 'Please respond True or False to the following questions.\n\nPress the spacebar to begin.';
+// Intro text for Tellegen (from user). You can edit this string
+// to adjust the instructions that appear immediately before the
+// questionnaire.
+const telleganScaleText = `
+Please respond True or False to the following questions.
+
+Take your time and answer every item.
+
+Press the spacebar to begin.
+`;
 
 const tellegen_instruction = {
   type: jsPsychHtmlKeyboardResponse,

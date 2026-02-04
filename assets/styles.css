@@ -1,0 +1,64 @@
+body {
+  margin: 0;
+}
+
+/* Outer wrapper: */
+.jspsych-display-element {
+  width: min(90vw, 900px);   /* up to 900px wide, but at most 90% of viewport */
+  margin: 5vh auto 10vh;     /* vertical space scales with viewport height; auto centers horizontally */
+  padding: 0 4vw 6vh;        /* side/bottom padding scale with viewport */
+  box-sizing: border-box;
+}
+
+/* Inner content within the above wrapper */
+.jspsych-content {
+  max-width: 100%;
+  margin: 0 auto;         
+  text-align: center;
+}
+
+/* Helper class to vertically center media-heavy trials (videos, images).
+   Apply this by adding the css class `center-vert` to a trial via the
+   `css_classes` option (jsPsych supports an array or string). */
+.jspsych-display-element.center-vert {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Use most of the viewport so short trials still center vertically.
+     Override the default .jspsych-display-element margins so centering works. */
+  margin: 0 auto;
+  padding: 4vh 4vw; 
+  min-height: calc(100vh - 8vh);
+  box-sizing: border-box;
+}
+
+.jspsych-display-element.center-vert .jspsych-content {
+  width: 100%;
+  text-align: center;
+  /* Make the inner content a flex container so its children (the inner wrapper
+     created by your trial stimulus) are centered vertically as well. */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+/* Also ensure any direct child div inside the content (your stimulus wrapper)
+   stretches to fill available height and centers its children. */
+.jspsych-display-element.center-vert .jspsych-content > div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+}
+
+.jspsych-display-element.center-vert video {
+  max-width: 100%;
+  max-height: 70vh;
+  display: block;
+  margin: 0 auto 1rem auto;
+}

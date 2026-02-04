@@ -53,100 +53,129 @@ const vviq_scale_labels = [
   'Perfectly clear and as vivid as real seeing'
 ];
 
+// Global VVIQ introduction screen (shown before any blocks).
+// Edit this text to explain the overall premise of the imagery task.
+const vviq_overall_intro = {
+  type: jsPsychHtmlKeyboardResponse,
+  stimulus: `
+    <div style="max-width:40rem; margin:0 auto; text-align:left;">
+      <h2>Imagery Questionnaire (VVIQ)</h2>
+      <p>In this part of the study, we&rsquo;re interested in how vivid the pictures in your mind&rsquo;s eye can be.</p>
+      <p>You&rsquo;ll read short descriptions of scenes or situations and then rate how clearly you can imagine them, using the scale from "No image at all" to "Perfectly clear and as vivid as real seeing."</p>
+      <p>There are no right or wrong answers &mdash; we just want your honest sense of how vivid each image feels to you.</p>
+      <p>Press the spacebar to begin.</p>
+    </div>
+  `,
+  choices: [' ']
+};
+
 // Build per-block instruction trials and block surveys (4 items per block)
 function mkLikertQuestions(promptsArray) {
-  return promptsArray.map(p => ({ prompt: p, labels: vviq_scale_labels }));
+  return promptsArray.map(p => ({
+    prompt: p,
+    labels: vviq_scale_labels,
+    required: true
+  }));
 }
 
 const vviq_instr_block1 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of some relative or friend whom you frequently see (but who is not with you at present) and consider carefully the picture that comes before your mind\'s eye.',
+  stimulus: 'Think of some relative or friend whom you frequently see (but who is not with you at present) and consider carefully the picture that comes before your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block1 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(0, 4))
+  questions: mkLikertQuestions(vviq_prompts.slice(0, 4)),
+  randomize_question_order: false
 };
 
 const vviq_instr_block2 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of a rising sun. Consider carefully the picture that comes before your mind\'s eye.',
+  stimulus: 'Think of a rising sun. Consider carefully the picture that comes before your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block2 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(4, 8))
+  questions: mkLikertQuestions(vviq_prompts.slice(4, 8)),
+  randomize_question_order: false
 };
 
 const vviq_instr_block3 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of the front of a shop which you often go to. Consider the picture that comes before your mind\'s eye.',
+  stimulus: 'Think of the front of a shop which you often go to. Consider the picture that comes before your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block3 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(8, 12))
+  questions: mkLikertQuestions(vviq_prompts.slice(8, 12)),
+  randomize_question_order: false
 };
 
 const vviq_instr_block4 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of a country scene which involves trees, mountains and a lake. Consider the picture that comes before your mind\'s eye.',
+  stimulus: 'Think of a country scene which involves trees, mountains and a lake. Consider the picture that comes before your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block4 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(12, 16))
+  questions: mkLikertQuestions(vviq_prompts.slice(12, 16)),
+  randomize_question_order: false
 };
 
 const vviq_instr_block5 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of being driven in a fast-moving automobile by a relative or friend along a major highway. Consider the picture that comes into your mind\'s eye.',
+  stimulus: 'Think of being driven in a fast-moving automobile by a relative or friend along a major highway. Consider the picture that comes into your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block5 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(16, 20))
+  questions: mkLikertQuestions(vviq_prompts.slice(16, 20)),
+  randomize_question_order: false
 };
 
 const vviq_instr_block6 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of a beach by the ocean on a warm summer\'s day. Consider the picture that comes before your mind\'s eye.',
+  stimulus: 'Think of a beach by the ocean on a warm summer\'s day. Consider the picture that comes before your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block6 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(20, 24))
+  questions: mkLikertQuestions(vviq_prompts.slice(20, 24)),
+  randomize_question_order: false
 };
 
 const vviq_instr_block7 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of a railway station. Consider the picture that comes before your mind\'s eye.',
+  stimulus: 'Think of a railway station. Consider the picture that comes before your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block7 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(24, 28))
+  questions: mkLikertQuestions(vviq_prompts.slice(24, 28)),
+  randomize_question_order: false
 };
 
 const vviq_instr_block8 = {
   type: jsPsychHtmlKeyboardResponse,
-  stimulus: 'Think of a garden with lawns, bushes, flowers and shrubs. Consider the picture that comes before your mind\'s eye.',
+  stimulus: 'Think of a garden with lawns, bushes, flowers and shrubs. Consider the picture that comes before your mind\'s eye.\n\nPress the spacebar to continue.',
   choices: [' ']
 };
 
 const vviq_block8 = {
   type: jsPsychSurveyLikert,
-  questions: mkLikertQuestions(vviq_prompts.slice(28, 32))
+  questions: mkLikertQuestions(vviq_prompts.slice(28, 32)),
+  randomize_question_order: false
 };
 
 const vviq_trials = [
+  vviq_overall_intro,
   vviq_instr_block1, vviq_block1,
   vviq_instr_block2, vviq_block2,
   vviq_instr_block3, vviq_block3,
