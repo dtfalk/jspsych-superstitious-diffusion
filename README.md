@@ -1,5 +1,5 @@
 # Configuration Guide
-
+(can start local server with `python -m http.server 8000`)
 The experiment configuration is managed in `javascript/config.js`.
 
 ## Quick Reference
