@@ -1,54 +1,58 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>jsPsych v8 Experiment</title>
+    <head>
+        <!-- Set character encoding scheme -->
+        <meta charset="utf-8">
 
-  <!-- jsPsych core -->
-  <script src="https://unpkg.com/jspsych@8.2.3"></script>
+        <!-- Study Title -->
+        <title>EvAccumExp</title>
 
-  <!-- jsPsych CSS -->
-  <link href="https://unpkg.com/jspsych@8.2.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+        <!-- jsPsych core -->
+        <script src="https://unpkg.com/jspsych@8.2.3"></script>
 
-  <!-- Custom layout tweaks -->
-  <link href="/assets/styles.css" rel="stylesheet" type="text/css" />
+        <!-- jsPsych CSS and custom CSS -->
+        <link href="https://unpkg.com/jspsych@8.2.3/css/jspsych.css" rel="stylesheet" type="text/css" />
+        <link href="/assets/styles.css" rel="stylesheet" type="text/css" />
 
-  <!-- jsPsych plugins -->
-  <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@2.2.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.1.0"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-video-keyboard-response@2.1.1"></script>
-  <script src="https://unpkg.com/@jspsych/plugin-survey-likert@2.2.0"></script>
+        <!-- jsPsych plugins -->
+        <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-multi-choice@2.2.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-text@2.1.0"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-video-keyboard-response@2.1.1"></script>
+        <script src="https://unpkg.com/@jspsych/plugin-survey-likert@2.2.0"></script>
 
-    <!-- Optional: JSZip for bundling JSON files into a single zip
-      when CONFIG.dataSaveMode === 'localZip' -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-</head>
+        <!-- JSZip for bundling JSON files into a single zip when CONFIG.dataSaveMode === 'localZip' -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    </head>
 
-<body></body>
+    <body></body>
 
-<script>
-  const jsPsych = initJsPsych({
-    on_finish: () => {}
-  });
-</script>
+    <script>
+        // Initialize JS Psych object for use throughout study
+        const jsPsych = initJsPsych({
+            on_finish: () => {}
+        });
+    </script>
 
-<!-- your existing experiment files -->
-<script src="/javascript/helpers.js"></script>
+    <!-- Import helper functions and configuration file -->
+    <script src="/javascript/helpers.js"></script>
+    <script src="/javascript/config.js"></script>
 
-<script src="/javascript/config.js"></script>
+    <!-- Import experimental timeline files -->
+    <script src="/javascript/experimental-pages/1-subject-source.js"></script>
+    <script src="/javascript/experimental-pages/2-id-entry.js"></script>
+    <script src="/javascript/experimental-pages/3-consent-screen.js"></script>
+    <script src="/javascript/experimental-pages/4-experiment-intro.js"></script>
+    <script src="/javascript/experimental-pages/5-practice-intro.js"></script>
+    <script src="/javascript/experimental-pages/6-practice-trials.js"></script>
+    <script src="/javascript/experimental-pages/7-practice-complete.js"></script>
+    <script src="/javascript/experimental-pages/8-actual-intro.js"></script>
+    <script src="/javascript/experimental-pages/9-actual-trials.js"></script>
+    <script src="/javascript/experimental-pages/10-actual-complete.js"></script>
+    <script src="/javascript/experimental-pages/11-questionnaires-intro.js"></script>
+    <script src="/javascript/experimental-pages/12-tellegen-scale.js"></script>
+    <script src="/javascript/experimental-pages/13-closing-screen.js"></script>
 
-<script src="/javascript/experimental-pages/consent.js"></script>
-<script src="/javascript/experimental-pages/subject-source.js"></script>
-<script src="/javascript/experimental-pages/id-entry.js"></script>
-<script src="/javascript/experimental-pages/instructions.js"></script>
-<script src="/javascript/experimental-pages/start-key.js"></script>
-<script src="/javascript/experimental-pages/actual-trials.js"></script>
-<script src="/javascript/experimental-pages/practice-trials.js"></script>
-<script src="/javascript/experimental-pages/questionnaires-intro.js"></script>
-<script src="/javascript/experimental-pages/tellegen.js"></script>
-<script src="/javascript/experimental-pages/vviq.js"></script>
-<script src="/javascript/experimental-pages/closing-screen.js"></script>
-
-<script src="/javascript/timeline.js"></script>
+    <!-- Import timeline file -->
+    <script src="/javascript/timeline.js"></script>
 </html>

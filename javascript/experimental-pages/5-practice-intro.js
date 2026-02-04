@@ -1,4 +1,4 @@
-const examples_intro = {
+const practice_intro_screen = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <div style="max-width:40rem; margin:0 auto; text-align:left;">
@@ -7,27 +7,17 @@ const examples_intro = {
       <p>Your task is to identify which letter the video is progressing towards and press the corresponding key as quickly as possible.</p>
       <p>Faster correct responses improve your performance score; performance influences your odds to win a raffle for an Amazon gift card.</p>
       <p>You will now complete <strong>${CONFIG.targetLetters.length * CONFIG.practice.nPerCondition}</strong> practice trials so you can get used to the task.</p>
-      <p>Press <strong>space</strong> to begin the practice trials.</p>
+      <p>Press <strong>${CONFIG.continueKey}</strong> to begin the practice trials.</p>
     </div>
   `,
-  choices: [" "]
-}
-
-// Build practice stimuli list using the same "stimulus"-in-variables pattern
-let practice_stimuli = [];
-CONFIG.targetLetters.forEach(condition => {
-  for (let i = CONFIG.practice.stimulusStartIndex; i < CONFIG.practice.stimulusStartIndex + CONFIG.practice.nPerCondition; i++) {
-    practice_stimuli.push({
-      stimulus: [
-        `${CONFIG.practice.folder}/${condition}/${condition}_${String(i)}.mp4`
-      ]
-    });
+  choices: [`${CONFIG.continueKey}`],
+  on_finish: function(data) {
+    const end_timestamp = performance.now()
+    const start_timestamp = end_timestamp - data.rt
+    saveJsonFile('Practice Instructions', {
+      time_on_screen: data.rt,
+      start_timestamp,
+      end_timestamp
+    })
   }
-});
-
-const practice_block = {
-  timeline: [video_ready, video_trial],
-  timeline_variables: practice_stimuli,
-  randomize_order: true,
-  data: { trial_type: "practice", block_number: null }
 }

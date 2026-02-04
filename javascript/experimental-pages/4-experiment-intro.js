@@ -1,4 +1,4 @@
-const instructions = {
+const experiment_intro_screen = {
   type: jsPsychHtmlKeyboardResponse,
   stimulus: `
     <div style="max-width:40rem; margin:0 auto; text-align:left;">
@@ -9,5 +9,17 @@ const instructions = {
       <p>Press <strong>space</strong> to continue.</p>
     </div>
   `,
-  choices: [" "]
+  choices: [" "],
+  on_start: function(trial) {
+    trial.start_time = performance.now()
+  },
+  on_finish: function(data) {
+    const end_timestamp = performance.now()
+    const start_timestamp = end_timestamp - data.rt
+    saveJsonFile('Experiment Introduction', {
+      time_on_screen: data.rt,
+      start_timestamp,
+      end_timestamp
+    })
+  }
 }

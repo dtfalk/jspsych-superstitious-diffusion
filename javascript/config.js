@@ -8,10 +8,12 @@ const CONFIG = {
   //   'localZip' - accumulate JSON and download one zip at the end
   //   'show'     - show jsPsych.data.displayData() at the end
   //   'server'   - POST to a backend you provide (Node/Python/etc.)
-  dataSaveMode: 'local',
+  dataSaveMode: 'localZip',
 
   // The letters that the stimuli videos resolve toward (used in instructions text)
   targetLetters: ["r", "s"],
+
+  continueKey: "z",
 
   // Practice stimuli configuration
   practice: {

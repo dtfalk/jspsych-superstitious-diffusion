@@ -1,4 +1,5 @@
-const redirect_trial = {
+// Page asking where the subject was redirected to the study from (e.g Prolific)
+const subject_source = {
   type: jsPsychSurveyMultiChoice,
   questions: [
     {
@@ -12,7 +13,7 @@ const redirect_trial = {
     }
   ],
   on_finish: data => {
-    
+
     // Extract subject's experimental source and set as globally accessible variable
     const response = data.response ? Object.values(data.response)[0] : null
     setExperimentSource(response)
