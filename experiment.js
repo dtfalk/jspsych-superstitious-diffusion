@@ -180,7 +180,7 @@ function saveJsonFile(stepName, payload) {
   }
 }
 
-function saveStimulusMap() {
+function saveStimulusMap(condition) {
   if (typeof STIMULUS_MAP === 'undefined') {
     console.log('No STIMULUS_MAP found; skipping stimulus map save.');
     return;
@@ -197,7 +197,7 @@ function saveStimulusMap() {
       encoded: STIMULUS_MAP[hexId]
     };
   });
-  saveJsonFile('Stimulus Map', {
+  saveJsonFile(`Stimulus Map (${condition})`, {
     total_stimuli: Object.keys(STIMULUS_MAP).length,
     mappings: decodedMap
   });
@@ -322,17 +322,33 @@ function flushTrials(trialType) {
 // =====================================================================
 
 var CONFIG = {
-  targetLetters: ["S", "X"],
-  continueKey: "k",
-  practice: {
-    folder: "practice-stimuli",
-    nPerCondition: 5,
-    stimulusStartIndex: 100
+  conditions: {
+    conditionA: {
+      targetLetters: ["S", "X"],
+      practice: {
+        folder: "practice-stimuli-conditionA",
+        nPerCondition: 5,
+        stimulusStartIndex: 100
+      },
+      main: {
+        folder: "actual-stimuli-conditionA",
+        nPerCondition: 5
+      }
+    },
+    conditionB: {
+      targetLetters: ["A", "B"],
+      practice: {
+        folder: "practice-stimuli-conditionB",
+        nPerCondition: 5,
+        stimulusStartIndex: 200
+      },
+      main: {
+        folder: "actual-stimuli-conditionB",
+        nPerCondition: 5
+      }
+    }
   },
-  main: {
-    folder: "actual-stimuli",
-    nPerCondition: 5,
-  }
+  continueKey: "k"
 };
 
 function getStimulusUrl(hexId) {
@@ -476,7 +492,6 @@ var STIMULUS_MAP = {
   "9e22040905c9915d": "YWN0dWFsLFgsNzE=",
   "a10839eecef415ea": "YWN0dWFsLFgsOTY=",
   "a210f0433d7cec48": "YWN0dWFsLFgsMjY=",
-  "a224c6606f08c79e": "YWN0dWFsLFMsMjY=",
   "a2dd3c10c7ab7cd6": "YWN0dWFsLFgsNDQ=",
   "a34204bd460f7a6e": "YWN0dWFsLFgsODI=",
   "a3dc5190a343ad47": "YWN0dWFsLFgsODY=",
