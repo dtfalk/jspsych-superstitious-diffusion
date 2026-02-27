@@ -2,14 +2,25 @@ import os
 import sys
 import shutil
 import cv2
+import ctypes
 from pathlib import Path
 from PIL import Image, ImageTk
 import tkinter as tk
 from tkinter import messagebox
 
-THUMBNAIL_SIZE = (200, 150)  # smaller to fit pairs in 4-column layout
-PAIRS_PER_ROW = 4
+# Enable per-monitor DPI awareness on Windows so the app scales
+# correctly when dragged between monitors with different DPI/resolution.
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(2)  # PROCESS_PER_MONITOR_DPI_AWARE
+except Exception:
+    try:
+        ctypes.windll.user32.SetProcessDPIAware()
+    except Exception:
+        pass
+
 OUTPUT_DIR_NAME = "selected_videos"
+# Thumbnail size and columns are computed dynamically in the app
+# based on the current screen dimensions.
 
 
 def find_paired_videos(parent_folder):
@@ -25,7 +36,7 @@ def find_paired_videos(parent_folder):
         sys.exit(1)
 
     pairs = []
-    for i in range(500):
+    for i in range(1024):
         vid_name = f"vid_{str(i).zfill(3)}"
         s_path = os.path.join(s_folder, vid_name, f"video_{vid_name}.mp4")
         x_path = os.path.join(x_folder, vid_name, f"video_{vid_name}.mp4")
@@ -36,7 +47,7 @@ def find_paired_videos(parent_folder):
     return pairs
 
 
-def extract_last_frame(video_path):
+def extract_last_frame(video_path, thumbnail_size=(200, 150)):
     if not os.path.exists(video_path):
         return None
 
@@ -58,7 +69,7 @@ def extract_last_frame(video_path):
 
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     img = Image.fromarray(frame)
-    img.thumbnail(THUMBNAIL_SIZE)
+    img.thumbnail(thumbnail_size)
     return img
 
 
@@ -70,9 +81,33 @@ class VideoSelectorApp:
         self.selected = set()  # set of indices into self.pairs
         self.photo_refs = []
         self.pair_frames = {}  # index -> pair outer frame
+        self._last_cols = None  # track column count for reflow
+        self.lazy_load_buffer = 200  # Number of images to preload above and below the current view
+        self.loaded_thumbnails = {}  # Cache for loaded thumbnails
+        self.scroll_debounce = None  # Timer for debouncing scroll events
+        self.preload_buffer = 100  # Number of images to preload in advance
 
         root.title("Video Pair Selector (S vs X)")
-        root.state("zoomed")
+
+        # --- Size the window to 90% of the current screen ---
+        screen_w = root.winfo_screenwidth()
+        screen_h = root.winfo_screenheight()
+        win_w = int(screen_w * 0.9)
+        win_h = int(screen_h * 0.9)
+        x = (screen_w - win_w) // 2
+        y = (screen_h - win_h) // 2
+        root.geometry(f"{win_w}x{win_h}+{x}+{y}")
+
+        # Compute thumbnail size and columns based on screen width.
+        # Each pair shows two thumbnails side-by-side + padding, so
+        # pair_width ≈ 2*thumb_w + 40.  We want PAIRS_PER_ROW pairs
+        # to fit in win_w.
+        self.pairs_per_row = max(1, min(6, win_w // 440))
+        thumb_w = max(120, (win_w // self.pairs_per_row - 50) // 2)
+        thumb_h = int(thumb_w * 0.75)
+        self.thumbnail_size = (thumb_w, thumb_h)
+        print(f"DEBUG: screen={screen_w}x{screen_h}  window={win_w}x{win_h}  "
+              f"cols={self.pairs_per_row}  thumb={self.thumbnail_size}")
 
         # --- Top bar ---
         top_bar = tk.Frame(root)
@@ -99,7 +134,7 @@ class VideoSelectorApp:
             lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         )
 
-        self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.canvas_window = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -107,8 +142,11 @@ class VideoSelectorApp:
 
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
 
-        # Configure grid columns for 4 pairs per row
-        for col in range(PAIRS_PER_ROW):
+        # Reflow grid when the canvas (window) is resized
+        self.canvas.bind("<Configure>", self._on_canvas_resize)
+
+        # Configure grid columns
+        for col in range(self.pairs_per_row):
             self.scrollable_frame.columnconfigure(col, weight=1)
 
         print("DEBUG: Loading paired thumbnails...")
@@ -117,6 +155,12 @@ class VideoSelectorApp:
 
     def _on_mousewheel(self, event):
         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    def _on_canvas_resize(self, event):
+        """Clear and redraw the canvas on resize."""
+        self.canvas.delete("all")  # Clear the canvas
+        self.canvas_window = self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
+        self.load_visible_thumbnails()  # Reload visible thumbnails
 
     def update_counter(self):
         self.counter.config(
@@ -139,29 +183,63 @@ class VideoSelectorApp:
         for child in widget.winfo_children():
             self._bind_click(child, idx)
 
+    def load_visible_thumbnails(self):
+        """Load thumbnails for visible pairs and a buffer around them."""
+        visible_start = max(0, self.canvas.yview()[0] * len(self.pairs) - self.lazy_load_buffer)
+        visible_end = min(len(self.pairs), self.canvas.yview()[1] * len(self.pairs) + self.lazy_load_buffer)
+
+        preload_start = max(0, visible_start - self.preload_buffer)
+        preload_end = min(len(self.pairs), visible_end + self.preload_buffer)
+
+        for idx in range(int(preload_start), int(preload_end)):
+            if idx not in self.loaded_thumbnails:
+                vid_name, s_path, x_path = self.pairs[idx]
+                self.loaded_thumbnails[idx] = (
+                    extract_last_frame(s_path, self.thumbnail_size),
+                    extract_last_frame(x_path, self.thumbnail_size)
+                )
+
+        # Remove thumbnails outside the buffer to free memory
+        for idx in list(self.loaded_thumbnails.keys()):
+            if idx < preload_start or idx > preload_end:
+                del self.loaded_thumbnails[idx]
+
+    def _on_canvas_scroll(self, event):
+        """Debounced scroll handler to prevent excessive updates."""
+        if self.scroll_debounce:
+            self.root.after_cancel(self.scroll_debounce)
+        self.scroll_debounce = self.root.after(50, lambda: self._perform_scroll(event))
+
+    def _perform_scroll(self, event):
+        self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        self.load_visible_thumbnails()
+
     def load_thumbnails(self):
+        """Initial thumbnail loading for the first visible set."""
+        self.load_visible_thumbnails()
         for idx, (vid_name, s_path, x_path) in enumerate(self.pairs):
-            row = idx // PAIRS_PER_ROW
-            col = idx % PAIRS_PER_ROW
+            if idx in self.loaded_thumbnails:
+                s_img, x_img = self.loaded_thumbnails[idx]
 
-            # Outer frame for the pair
-            pair_frame = tk.Frame(self.scrollable_frame, bd=0, bg="#1e1e1e",
-                                  highlightbackground="#444", highlightthickness=2)
-            pair_frame.grid(row=row, column=col, padx=6, pady=6, sticky="nsew")
-            self.pair_frames[idx] = pair_frame
+                row = idx // self.pairs_per_row
+                col = idx % self.pairs_per_row
 
-            # Title label
-            title = tk.Label(pair_frame, text=vid_name, font=("Arial", 10, "bold"),
+                # Outer frame for the pair
+                pair_frame = tk.Frame(self.scrollable_frame, bd=0, bg="#1e1e1e",
+                                          highlightbackground="#444", highlightthickness=2)
+                pair_frame.grid(row=row, column=col, padx=6, pady=6, sticky="nsew")
+                self.pair_frames[idx] = pair_frame
+
+                # Title label
+                title = tk.Label(pair_frame, text=vid_name, font=("Arial", 10, "bold"),
                              bg="#1e1e1e", fg="white")
-            title.pack(pady=(4, 2))
+                title.pack(pady=(4, 2))
 
-            # Side-by-side container
-            side_frame = tk.Frame(pair_frame, bg="#1e1e1e")
-            side_frame.pack(padx=4, pady=(0, 4))
+                # Side-by-side container
+                side_frame = tk.Frame(pair_frame, bg="#1e1e1e")
+                side_frame.pack(padx=4, pady=(0, 4))
 
-            # S thumbnail
-            s_img = extract_last_frame(s_path)
-            if s_img is not None:
+                # S thumbnail
                 s_photo = ImageTk.PhotoImage(s_img)
                 self.photo_refs.append(s_photo)
                 s_container = tk.Frame(side_frame, bg="#1e1e1e")
@@ -172,9 +250,7 @@ class VideoSelectorApp:
                 s_img_lbl = tk.Label(s_container, image=s_photo, bg="#1e1e1e")
                 s_img_lbl.pack()
 
-            # X thumbnail
-            x_img = extract_last_frame(x_path)
-            if x_img is not None:
+                # X thumbnail
                 x_photo = ImageTk.PhotoImage(x_img)
                 self.photo_refs.append(x_photo)
                 x_container = tk.Frame(side_frame, bg="#1e1e1e")
@@ -185,11 +261,11 @@ class VideoSelectorApp:
                 x_img_lbl = tk.Label(x_container, image=x_photo, bg="#1e1e1e")
                 x_img_lbl.pack()
 
-            # Bind clicks on entire pair frame and all children
-            self._bind_click(pair_frame, idx)
+                # Bind clicks on entire pair frame and all children
+                self._bind_click(pair_frame, idx)
 
-            if (idx + 1) % 10 == 0:
-                print(f"DEBUG: Loaded {idx + 1}/{len(self.pairs)} pairs")
+                if (idx + 1) % 10 == 0:
+                    print(f"DEBUG: Loaded {idx + 1}/{len(self.pairs)} pairs")
 
         print(f"DEBUG: Total pair widgets: {len(self.pair_frames)}")
 
