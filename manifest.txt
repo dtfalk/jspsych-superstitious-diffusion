@@ -1,0 +1,18 @@
+cognition_prod ---> The folder with code for running the production version of the experiment
+
+cognition_dev ---> The folder with code for running the development and testing version of the experiment
+
+stimuli ---> Folder with the selected stimuli but before they get flattened (post execution of scripts/prepare_stimuli.py and pre execution of scripts/flatten-for-upload.py). This folder was produced via scripts/prepare_stimuli.py using seed of 42.
+
+upload ---> The final ready to upload stimuli (post execution of scripts/flatten-for-upload.py)
+
+scripts ---> Contains helper scripts for prepping stimuli
+	prepare_stimuli.py --> go from intermediate folder to stimuli/ folder
+		For the two current conditions I ran the following commands
+			1. python .\scripts\prepare-stimuli.py --seed 42 .\Intermediate_Output_Data_And_Code\post_video_selection_data\not_shared_path_walking_data\stimuli_only\ stimuli\vanilla_paths  
+    		2. python .\scripts\prepare-stimuli.py --seed 42 .\Intermediate_Output_Data_And_Code\post_video_selection_data\shared_path_walking_data\stimuli_only\ stimuli\shared_paths
+	flatten-for-upload.py --> take stimuli/ to upload/
+	format-results.py --> takes the weird cognition output and puts it in a format a human can read (assuming JSON outputs and not csv)
+	generate-indices.py --> Yeah this one is rough basically code needs to know what the indices are so this just prints out the stimuli indices so i can copy paste into the code.... will hopefully fix this later.
+		
+
