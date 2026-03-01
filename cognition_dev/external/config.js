@@ -21,8 +21,8 @@ var DEV_CONDITION = "shared_paths";  // "shared_paths" or "vanilla_paths"
 var SHOW_CONDITION_PICKER = true;
 
 // Limit number of stimuli for quick testing (0 = use all)
-var DEV_ACTUAL_LIMIT = 5;    // e.g., 4 = first 4 actual pairs (8 videos total)
-var DEV_PRACTICE_LIMIT = 2;  // e.g., 2 = first 2 practice pairs
+var DEV_ACTUAL_LIMIT = 10;    // e.g., 4 = first 4 actual pairs (8 videos total)
+var DEV_PRACTICE_LIMIT = 5;  // e.g., 2 = first 2 practice pairs
 
 // ======================== END DEV SETTINGS ====================
 
@@ -67,8 +67,8 @@ var STIMULUS_INDICES = {
 // =====================================================================
 
 // University of Chicago header HTML (shared across screens)
-var UCHICAGO_HEADER = '<div style="text-align:center; margin-bottom:1.8rem; padding-bottom:1.2rem; border-bottom:2px solid #800000;">' +
-  '<img src="https://upload.wikimedia.org/wikipedia/en/7/79/University_of_Chicago_shield.svg" alt="University of Chicago" style="height:55px; margin-bottom:0.5rem; display:block; margin-left:auto; margin-right:auto;" onerror="this.style.display=\'none\'">' +
+var UCHICAGO_HEADER = '<div style="text-align:center; margin-bottom:1.8rem; padding-bottom:1.2rem; border-bottom:0.125rem solid #800000;">' +
+  '<img src="https://upload.wikimedia.org/wikipedia/en/7/79/University_of_Chicago_shield.svg" alt="University of Chicago" style="height:3.4rem; margin-bottom:0.5rem; display:block; margin-left:auto; margin-right:auto;" onerror="this.style.display=\'none\'">' +
   '<div style="font-family:Georgia,serif; font-size:0.85rem; color:#800000; letter-spacing:0.12em; font-weight:bold;">THE UNIVERSITY OF CHICAGO</div>' +
   '<div style="font-size:0.72rem; color:#767676; margin-top:0.25rem; font-family:Arial,sans-serif; text-transform:uppercase; letter-spacing:0.08em;">Department of Psychology</div>' +
   '</div>';
