@@ -69,11 +69,9 @@ CONFIGURATION (in config.js)
 MASTER SWITCHES:
 
   DEV_MODE = true         Development mode
-                          - Shows condition picker (if enabled)
-                          - Limits stimuli for quick testing
+                          - Shows condition picker at start (if enabled)
 
   DEV_MODE = false        Production mode
-                          - Uses all stimuli
                           - No condition picker
 
   RANDOMIZE_CONDITION     When true: 50/50 random assignment
@@ -83,19 +81,52 @@ MASTER SWITCHES:
                           Used when RANDOMIZE_CONDITION = false
 
 
+STIMULUS LIMITS (work in BOTH dev and prod mode):
+
+  ACTUAL_LIMIT = 0        Use all actual stimuli
+  ACTUAL_LIMIT = 5        Use only 5 actual stimulus pairs (10 videos)
+
+  PRACTICE_LIMIT = 0      Use all practice stimuli
+  PRACTICE_LIMIT = 3      Use only 3 practice stimulus pairs (6 videos)
+
+  These are useful for testing the full experiment flow quickly
+  without waiting for all stimuli to load/play.
+
+
+DEV-ONLY SETTINGS:
+
+  DEV_CONDITION           Which condition to test in dev mode
+                          (only used if SHOW_CONDITION_PICKER = false)
+
+  SHOW_CONDITION_PICKER   When true: shows picker screen at start
+                          When false: uses DEV_CONDITION automatically
+
+
 TYPICAL SETUPS:
 
-  Testing:
+  Quick testing (limited stimuli, picker):
     DEV_MODE = true
+    SHOW_CONDITION_PICKER = true
+    ACTUAL_LIMIT = 5
+    PRACTICE_LIMIT = 3
 
-  Run one condition only:
+  Test full experiment flow:
+    DEV_MODE = false
+    ACTUAL_LIMIT = 5
+    PRACTICE_LIMIT = 3
+
+  Run one condition only (full stimuli):
     DEV_MODE = false
     RANDOMIZE_CONDITION = false
     FIXED_CONDITION = "shared_paths"
+    ACTUAL_LIMIT = 0
+    PRACTICE_LIMIT = 0
 
   Full study (random assignment):
     DEV_MODE = false
     RANDOMIZE_CONDITION = true
+    ACTUAL_LIMIT = 0
+    PRACTICE_LIMIT = 0
 
 
 =====================================================================
@@ -150,3 +181,31 @@ SETUP STEPS
 6. Paste experiment.js into Task Code editor
 
 7. Test with Preview - check browser console for errors
+
+
+=====================================================================
+DATA HANDLING
+=====================================================================
+
+CONSENT FLOW:
+
+  If participant CONSENTS:
+    - Experiment continues normally
+    - All trial data is saved to Cognition.run
+    - At the end, they see "Your responses have been saved"
+    - They're told they may close the tab
+
+  If participant DOES NOT CONSENT:
+    - Experiment ends immediately
+    - NO data is saved
+    - They see "Thank you for considering participation"
+    - They're told they may close the tab
+
+
+DATA SAVING:
+
+  - Data is saved throughout the experiment via saveJsonFile()
+  - This adds data to jsPsych's data store
+  - Cognition.run automatically saves when the experiment ends
+  - The closing screen ensures all data is saved before telling
+    participants they can close

@@ -212,9 +212,17 @@ function createScreens(jsPsych) {
     on_finish: function(data) {
       var response = data.response ? Object.values(data.response)[0] : null;
       
-      // End experiment if they don't consent
+      // If they don't consent, end immediately without saving data
       if (response !== "Yes, I consent to participate") {
-        jsPsych.endExperiment('Thank you for considering participation in this study.');
+        jsPsych.endExperiment(
+          '<div style="text-align:center; max-width:44rem; margin:0 auto;">' +
+          UCHICAGO_HEADER +
+          '<h2>Thank You</h2>' +
+          '<p>Thank you for considering participation in this study.</p>' +
+          '<p style="margin-top:2rem; font-weight:bold;">You may now close this tab.</p>' +
+          '</div>'
+        );
+        return;  // Don't save any data for non-consent
       }
       
       saveJsonFile('Consent', { consented: true });
@@ -425,13 +433,26 @@ function createScreens(jsPsych) {
     data: { screen_name: "Closing" },
     stimulus: '<div style="text-align:center; max-width:44rem; margin:0 auto;">' + 
       UCHICAGO_HEADER +
-      '<h2>Thank You</h2>' +
+      '<h2>Saving Your Data</h2>' +
       '<p>Thank you for your participation in this study.</p>' +
-      '<p style="color:#767676;">Your responses have been recorded.</p>' +
+      '<p style="color:#767676;">Please wait while we save your responses...</p>' +
       '<p style="margin-top:2rem;">Press any key to finish.</p>' +
       '</div>',
     on_finish: function(data) {
+      // Save the closing screen data
       saveJsonFile('Closing Screen', { reaction_time_ms: data.rt });
+      
+      // End experiment with final message
+      // Cognition.run saves all data when endExperiment is called
+      jsPsych.endExperiment(
+        '<div style="text-align:center; max-width:44rem; margin:0 auto;">' +
+        UCHICAGO_HEADER +
+        '<h2>Thank You</h2>' +
+        '<p>Thank you for your participation in this study.</p>' +
+        '<p style="color:#767676;">Your responses have been saved.</p>' +
+        '<p style="margin-top:2rem; font-weight:bold;">You may now close this tab.</p>' +
+        '</div>'
+      );
     }
   };
   
