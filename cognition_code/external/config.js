@@ -16,8 +16,8 @@ var FIXED_CONDITION = "vanilla_paths";  // "shared_paths" or "vanilla_paths"
 // ======================== STIMULUS LIMITS ========================
 // Limit number of stimuli (0 = use all)
 // These apply regardless of DEV_MODE, so you can test prod with fewer stimuli
-var ACTUAL_LIMIT = 5;     // Number of actual stimulus pairs (0 = all)
-var PRACTICE_LIMIT = 3;    // Number of practice stimulus pairs (0 = all)
+var ACTUAL_LIMIT = 0;     // Number of actual stimulus pairs (0 = all)
+var PRACTICE_LIMIT = 0;    // Number of practice stimulus pairs (0 = all)
 // =================================================================
 
 // ======================== DEV SETTINGS ========================
