@@ -1,6 +1,5 @@
 // =====================================================================
 // questionnaires.js — Questionnaire definitions
-// Upload this as External JS #5 in Cognition.run
 //
 // To add a new questionnaire:
 // 1. Define the scale and questions array
@@ -104,15 +103,4 @@ function createTellegenTrial(jsPsych, saveJsonFile) {
   };
 }
 
-// ---------------------------------------------------------------------
-// Add more questionnaires here following same pattern:
-// 1. Define SCALE and QUESTIONS arrays
-// 2. Create factory function that returns trial object
-// 3. Add to QUESTIONNAIRES object below
-// ---------------------------------------------------------------------
-
-// Export all questionnaire factories
-var QUESTIONNAIRES = {
-  tellegen: createTellegenTrial
-  // vviq: createVviqTrial,  // add more here
-};
+console.log('[questionnaires.js] Loaded successfully');

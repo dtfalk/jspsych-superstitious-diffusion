@@ -1,6 +1,5 @@
 // =====================================================================
 // plugin-loader.js — Load jsPsych plugins from CDN
-// Upload this as External JS #1 in Cognition.run
 // =====================================================================
 
 var PLUGIN_URLS = [

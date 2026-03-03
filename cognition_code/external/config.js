@@ -1,50 +1,67 @@
 // =====================================================================
-// config.js — DEVELOPMENT Configuration  
-// Upload this as External JS #2 in Cognition.run (after plugin-loader.js)
+// config.js — Experiment Configuration
 // =====================================================================
-//
-// DEVELOPMENT VERSION: Manual condition selection for testing
-// Set DEV_CONDITION below to choose which condition to test:
-//   "shared_paths" - Videos from stimuli/shared_paths/
-//   "vanilla_paths" - Videos from stimuli/vanilla_paths/
-//
-// Or set SHOW_CONDITION_PICKER = true to let user select on screen
-//
-// =====================================================================
+
+// ======================== MASTER SWITCHES ========================
+// DEV_MODE: true = dev features (picker, limited stimuli), false = production
+var DEV_MODE = false;
+
+// RANDOMIZE_CONDITION: true = 50/50 random assignment, false = use FIXED_CONDITION
+var RANDOMIZE_CONDITION = false;
+
+// FIXED_CONDITION: which condition to use when RANDOMIZE_CONDITION = false
+var FIXED_CONDITION = "vanilla_paths";  // "shared_paths" or "vanilla_paths"
+// =================================================================
+
+// ======================== STIMULUS LIMITS ========================
+// Limit number of stimuli (0 = use all)
+// These apply regardless of DEV_MODE, so you can test prod with fewer stimuli
+var ACTUAL_LIMIT = 5;     // Number of actual stimulus pairs (0 = all)
+var PRACTICE_LIMIT = 3;    // Number of practice stimulus pairs (0 = all)
+// =================================================================
 
 // ======================== DEV SETTINGS ========================
-// Set this to the condition you want to test:
+// These settings only apply when DEV_MODE = true
+//
+// Condition to test (only used if SHOW_CONDITION_PICKER = false):
 var DEV_CONDITION = "shared_paths";  // "shared_paths" or "vanilla_paths"
 
-// Set to true to show a condition picker screen at the start
-// (overrides DEV_CONDITION - user picks interactively)
+// Set to true to show a condition picker screen at the start:
 var SHOW_CONDITION_PICKER = true;
-
-// Limit number of stimuli for quick testing (0 = use all)
-var DEV_ACTUAL_LIMIT = 10;    // e.g., 4 = first 4 actual pairs (8 videos total)
-var DEV_PRACTICE_LIMIT = 5;  // e.g., 2 = first 2 practice pairs
-
 // ======================== END DEV SETTINGS ====================
+
+// ======================== CONDITION LOGIC ====================
+// Random condition (computed once at load time)
+var RANDOM_CONDITION = Math.random() < 0.5 ? "shared_paths" : "vanilla_paths";
+
+// Determine effective condition:
+// - DEV_MODE: use DEV_CONDITION (or picker overrides)
+// - Production + RANDOMIZE_CONDITION: use RANDOM_CONDITION
+// - Production + !RANDOMIZE_CONDITION: use FIXED_CONDITION
+var EFFECTIVE_CONDITION = DEV_MODE ? DEV_CONDITION : 
+                          (RANDOMIZE_CONDITION ? RANDOM_CONDITION : FIXED_CONDITION);
+// =============================================================
 
 var CONFIG = {
   // Target letters for detection task
   targetLetters: ["S", "X"],
   
-  // Condition - will be set from DEV_CONDITION or picker
-  // This gets updated by the condition picker if enabled
-  condition: DEV_CONDITION,
+  // Condition - set by picker in dev, or determined by flags in production
+  condition: EFFECTIVE_CONDITION,
   
-  // For compatibility with prod - set to 1 or 2
-  conditionNumber: DEV_CONDITION === "shared_paths" ? 1 : 2,
+  // Numeric condition (1 = shared_paths, 2 = vanilla_paths)
+  conditionNumber: EFFECTIVE_CONDITION === "shared_paths" ? 1 : 2,
   
   // UI settings
   continueKey: "k",
   
-  // Dev mode flag
-  isDev: true,
-  showConditionPicker: SHOW_CONDITION_PICKER,
-  actualLimit: DEV_ACTUAL_LIMIT,
-  practiceLimit: DEV_PRACTICE_LIMIT
+  // Mode flags
+  isDev: DEV_MODE,
+  showConditionPicker: DEV_MODE && SHOW_CONDITION_PICKER,
+  
+  // Stimulus limits (0 = use all) - works in both dev and prod mode
+  actualLimit: ACTUAL_LIMIT,
+  practiceLimit: PRACTICE_LIMIT
 };
 
 // =====================================================================
