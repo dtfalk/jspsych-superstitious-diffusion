@@ -433,9 +433,7 @@ function createScreens(jsPsych) {
     data: { screen_name: "Closing" },
     stimulus: '<div style="text-align:center; max-width:44rem; margin:0 auto;">' + 
       UCHICAGO_HEADER +
-      '<h2>Saving Your Data</h2>' +
-      '<p>Thank you for your participation in this study.</p>' +
-      '<p style="color:#767676;">Please wait while we save your responses...</p>' +
+      '<h2>Questionnaires Complete</h2>' +
       '<p style="margin-top:2rem;">Press any key to finish.</p>' +
       '</div>',
     on_finish: function(data) {
@@ -447,7 +445,7 @@ function createScreens(jsPsych) {
       jsPsych.endExperiment(
         '<div style="text-align:center; max-width:44rem; margin:0 auto;">' +
         UCHICAGO_HEADER +
-        '<h2>Thank You</h2>' +
+        '<h2>Experiment Complete</h2>' +
         '<p>Thank you for your participation in this study.</p>' +
         '<p style="color:#767676;">Your responses have been saved.</p>' +
         '<p style="margin-top:2rem; font-weight:bold;">You may now close this tab.</p>' +
