@@ -25,8 +25,10 @@ onAllPluginsLoaded(function() {
   // =====================================================================
   // INITIALIZE JSPSYCH
   // =====================================================================
+  // NOTE: We assign to global jsPsych (no 'var') so that helper functions
+  // in external files (data-recording.js, screens.js, etc.) can access it.
   
-  var jsPsych = initJsPsych();
+  jsPsych = initJsPsych();
   
   
   // =====================================================================

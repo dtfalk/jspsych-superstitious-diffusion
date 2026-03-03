@@ -147,8 +147,9 @@ function loadStimuli() {
   // Build actual stimuli with block splitting
   // -----------------------------------------------------------------
   // For each actual index, we have an S video and an X video.
-  // We randomly assign one to block 1 and one to block 2.
-  // This ensures each block has a mix of S and X stimuli.
+  // We assign them to opposite blocks, ensuring:
+  //   1. Each S/X pair is split across blocks
+  //   2. Each block has EXACTLY 50% S and 50% X
   
   // Clear the arrays
   actual_stimuli_block_1.length = 0;
@@ -157,6 +158,13 @@ function loadStimuli() {
   
   // Shuffle the indices to randomize which pairs come first
   var shuffledIndices = shuffleArray(actualIndices);
+  
+  // To ensure exactly 50% S in each block:
+  // - First half of indices: S goes to block 1, X goes to block 2
+  // - Second half of indices: X goes to block 1, S goes to block 2
+  // Then we shuffle the blocks so order isn't predictable.
+  
+  var halfPoint = Math.floor(shuffledIndices.length / 2);
   
   for (var i = 0; i < shuffledIndices.length; i++) {
     var idx = shuffledIndices[i];
@@ -179,22 +187,26 @@ function loadStimuli() {
       _condition: condition
     };
     
-    // Randomly decide which goes to block 1 vs block 2
-    // This ensures ~50% S and ~50% X in each block
-    if (Math.random() < 0.5) {
-      // S to block 1, X to block 2
+    // First half: S to block 1, X to block 2
+    // Second half: X to block 1, S to block 2
+    // This guarantees exactly 50% S and 50% X in each block
+    if (i < halfPoint) {
       sStimulus._block = 1;
       xStimulus._block = 2;
       actual_stimuli_block_1.push(sStimulus);
       actual_stimuli_block_2.push(xStimulus);
     } else {
-      // X to block 1, S to block 2
       xStimulus._block = 1;
       sStimulus._block = 2;
       actual_stimuli_block_1.push(xStimulus);
       actual_stimuli_block_2.push(sStimulus);
     }
   }
+  
+  // Shuffle each block so the order isn't predictable
+  // (within-block randomization happens in timeline anyway, but just in case)
+  actual_stimuli_block_1 = shuffleArray(actual_stimuli_block_1);
+  actual_stimuli_block_2 = shuffleArray(actual_stimuli_block_2);
   
   // Build combined array for preloading
   for (var i = 0; i < actual_stimuli_block_1.length; i++) {

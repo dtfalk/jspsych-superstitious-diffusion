@@ -114,11 +114,15 @@ function createVideoTrials(jsPsych) {
     
     on_load: function() {
       // Set up listener to record when video ends
-      var video = document.querySelector('#jspsych-video-keyboard-response-stimulus video');
+      // Try multiple selectors for robustness across jsPsych versions
+      var video = document.querySelector('video') || 
+                  document.querySelector('#jspsych-video-keyboard-response-stimulus video');
       if (video) {
         video.addEventListener('ended', function() {
           window.__jspsych_video_ended = performance.now();
         });
+      } else {
+        console.warn('[video-trials] Could not find video element for ended listener');
       }
     },
     
@@ -219,11 +223,16 @@ function createVideoTrials(jsPsych) {
     },
     
     on_load: function() {
-      var video = document.querySelector('#jspsych-video-keyboard-response-stimulus video');
+      // Set up listener to record when video ends
+      // Try multiple selectors for robustness across jsPsych versions
+      var video = document.querySelector('video') || 
+                  document.querySelector('#jspsych-video-keyboard-response-stimulus video');
       if (video) {
         video.addEventListener('ended', function() {
           window.__jspsych_video_ended = performance.now();
         });
+      } else {
+        console.warn('[video-trials] Could not find video element for ended listener');
       }
     },
     

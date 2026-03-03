@@ -255,7 +255,7 @@ function createScreens(jsPsych) {
       
       '<p>Your performance depends on both accuracy and speed. You will only be ' +
       'rewarded for correct responses, so try to respond as accurately as possible. ' +
-      'When you are correct, faster responses count as better performance. Remember, ' +
+      'If you respond correctly, then faster responses result in a higher score. Remember, ' +
       'your performance influences your chances to win the raffle.</p>' +
       
       '<p>Press <strong>' + CONFIG.continueKey + '</strong> to continue.</p>' +
@@ -295,7 +295,7 @@ function createScreens(jsPsych) {
       
       '<p>Your performance depends on both accuracy and speed. You will only be ' +
       'rewarded for correct responses, so try to respond as accurately as possible. ' +
-      'When you are correct, faster responses count as better performance.</p>' +
+      'If you respond correctly, then faster responses result in a higher score.</p>' +
       
       '<p>Press <strong>' + CONFIG.continueKey + '</strong> to start the practice trials.</p>' +
       '</div>',
@@ -353,7 +353,7 @@ function createScreens(jsPsych) {
       
       '<p>Your performance depends on both accuracy and speed. You will only be ' +
       'rewarded for correct responses, so try to respond as accurately as possible. ' +
-      'When you are correct, faster responses count as better performance. Remember, ' +
+      'If you respond correctly, then faster responses result in a higher score. Remember, ' +
       'your performance influences your chances to win the raffle.</p>' +
       
       '<p>Press <strong>' + CONFIG.continueKey + '</strong> to begin.</p>' +
@@ -393,9 +393,9 @@ function createScreens(jsPsych) {
     type: jsPsychHtmlKeyboardResponse,
     data: { screen_name: "Actual Complete" },
     stimulus: '<div style="max-width:50rem; margin:0 auto; text-align:left;">' +
-      '<h2>Experiment Complete</h2>' +
+      '<h2>Trials Complete</h2>' +
       '<p>You have completed all video trials.</p>' +
-      '<p>Press <strong>' + CONFIG.continueKey + '</strong> to continue to a brief questionnaire.</p>' +
+      '<p>Press <strong>' + CONFIG.continueKey + '</strong> to continue.</p>' +
       '</div>',
     choices: [CONFIG.continueKey],
     on_finish: function(data) {
@@ -434,7 +434,7 @@ function createScreens(jsPsych) {
     stimulus: '<div style="text-align:center; max-width:44rem; margin:0 auto;">' + 
       UCHICAGO_HEADER +
       '<h2>Questionnaires Complete</h2>' +
-      '<p style="margin-top:2rem;">Press any key to finish.</p>' +
+      '<p style="margin-top:2rem;">Press any key to continue.</p>' +
       '</div>',
     on_finish: function(data) {
       // Save the closing screen data
