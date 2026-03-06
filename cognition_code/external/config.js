@@ -48,8 +48,8 @@ var CONFIG = {
 
   // Button to press for each letter (what key the user presses)
   buttonMap: {
-    "S": "3",
-    "X": "9"
+    "S": "4",
+    "X": "8"
   },
   
   // Get the response buttons as an array (for jsPsych choices)

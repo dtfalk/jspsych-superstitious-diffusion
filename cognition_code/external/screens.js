@@ -257,7 +257,7 @@ function createScreens(jsPsych) {
       'your performance influences your chances to win the raffle.</p>' +
 
       '<p>You will now see two examples of the videos you will encounter during the trials.' +
-      'One example video will progress towards ' + article1 + ' <strong>' + letter1 + '</strong>' +
+      ' One example video will progress towards ' + article1 + ' <strong>' + letter1 + '</strong>' +
       ' and ' +
       'the other example video will progress towards ' + article2 + ' <strong>' + letter2 + '</strong>.' +
       'These videos are meant to familiarize you with the type of video you will see during the experiment and you do not need to press any keys while you watch.</p>' +
