@@ -24,7 +24,7 @@ var PRACTICE_LIMIT = 0;    // Number of practice stimulus pairs (0 = all)
 // These settings only apply when DEV_MODE = true
 //
 // Condition to test (only used if SHOW_CONDITION_PICKER = false):
-var DEV_CONDITION = "shared_paths";  // "shared_paths" or "vanilla_paths"
+var DEV_CONDITION = "vanilla_paths";  // "shared_paths" or "vanilla_paths"
 
 // Set to true to show a condition picker screen at the start:
 var SHOW_CONDITION_PICKER = true;
@@ -45,6 +45,17 @@ var EFFECTIVE_CONDITION = DEV_MODE ? DEV_CONDITION :
 var CONFIG = {
   // Target letters for detection task
   targetLetters: ["S", "X"],
+
+  // Button to press for each letter (what key the user presses)
+  buttonMap: {
+    "S": "3",
+    "X": "9"
+  },
+  
+  // Get the response buttons as an array (for jsPsych choices)
+  get responseButtons() {
+    return this.targetLetters.map(letter => this.buttonMap[letter]);
+  },
   
   // Condition - set by picker in dev, or determined by flags in production
   condition: EFFECTIVE_CONDITION,

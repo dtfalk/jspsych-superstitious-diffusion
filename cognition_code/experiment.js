@@ -72,6 +72,7 @@ onAllPluginsLoaded(function() {
   
   // --- Part 2: Introduction ---
   timeline.push(screens.experiment_intro);  // Explain the task
+  timeline.push(screens.example_videos);    // Show example S and X videos
   
   // --- Part 3: Practice ---
   timeline.push(screens.practice_intro);    // Introduce practice

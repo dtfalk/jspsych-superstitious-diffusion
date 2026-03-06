@@ -97,8 +97,8 @@ function createVideoTrials(jsPsych) {
     width: 500,
     height: 500,
     
-    // Only S and X keys are valid responses
-    choices: CONFIG.targetLetters,
+    // Response buttons (mapped from target letters)
+    choices: CONFIG.responseButtons,
     
     // Don't automatically end when video finishes - wait for response
     trial_ends_after_video: false,
@@ -213,7 +213,8 @@ function createVideoTrials(jsPsych) {
     
     width: 500,
     height: 500,
-    choices: CONFIG.targetLetters,
+    // Response buttons (mapped from target letters)
+    choices: CONFIG.responseButtons,
     trial_ends_after_video: false,
     response_ends_trial: true,
     

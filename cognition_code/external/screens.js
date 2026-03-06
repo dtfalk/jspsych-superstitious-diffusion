@@ -105,6 +105,8 @@ function createScreens(jsPsych) {
   var letter2 = CONFIG.targetLetters[1];  // Usually "X"
   var article1 = getArticle(letter1);     // "an" for S
   var article2 = getArticle(letter2);     // "an" for X
+  var button1 = CONFIG.buttonMap[letter1]; // Button to press for letter1
+  var button2 = CONFIG.buttonMap[letter2]; // Button to press for letter2
   
   // -----------------------------------------------------------------
   // Storage for participant info
@@ -245,18 +247,20 @@ function createScreens(jsPsych) {
       'into either ' + article1 + ' <strong>' + letter1 + '</strong> or ' + 
       article2 + ' <strong>' + letter2 + '</strong>.</p>' +
       
-      '<p>Your task is to identify which letter the video is progressing towards.</p>' +
-      
-      '<p>Press the <strong>' + letter1 + '</strong> key if you believe the video ' +
-      'is progressing towards ' + article1 + ' <strong>' + letter1 + '</strong>.</p>' +
-      
-      '<p>Press the <strong>' + letter2 + '</strong> key if you believe the video ' +
+      '<p>Your task is to identify which letter the video is progressing towards. During the experiment, you will press the <strong>' + button1 + '</strong> key if you believe the video ' +
+      'is progressing towards ' + article1 + ' <strong>' + letter1 + '</strong>, and you will press the <strong>' + button2 + '</strong> key if you believe the video ' +
       'is progressing towards ' + article2 + ' <strong>' + letter2 + '</strong>.</p>' +
       
       '<p>Your performance depends on both accuracy and speed. You will only be ' +
       'rewarded for correct responses, so try to respond as accurately as possible. ' +
       'If you respond correctly, then faster responses result in a higher score. Remember, ' +
       'your performance influences your chances to win the raffle.</p>' +
+
+      '<p>You will now see two examples of the videos you will encounter during the trials.' +
+      'One example video will progress towards ' + article1 + ' <strong>' + letter1 + '</strong>' +
+      ' and ' +
+      'the other example video will progress towards ' + article2 + ' <strong>' + letter2 + '</strong>.' +
+      'These videos are meant to familiarize you with the type of video you will see during the experiment and you do not need to press any keys while you watch.</p>' +
       
       '<p>Press <strong>' + CONFIG.continueKey + '</strong> to continue.</p>' +
       '</div>',
@@ -264,6 +268,99 @@ function createScreens(jsPsych) {
     on_finish: function(data) {
       saveJsonFile('Experiment Intro', { reaction_time_ms: data.rt });
     }
+  };
+  
+  // -----------------------------------------------------------------
+  // 4b. EXAMPLE VIDEOS
+  // -----------------------------------------------------------------
+  // Shows example videos of S and X before practice trials
+  
+  // Press space to start S example video
+  var example_s_ready = {
+    type: jsPsychHtmlKeyboardResponse,
+    data: { screen_name: "Example S Ready" },
+    stimulus: '<div style="position:fixed; top:0; left:0; width:100vw; height:100vh; ' +
+              'display:flex; align-items:center; justify-content:center;">' +
+      '<div style="text-align:center;">' +
+      '<p style="font-size:1.3rem;">First, you will see an example of a video that develops into ' +
+      article1 + ' <strong>' + letter1 + '</strong>.</p>' +
+      '<p style="font-size:1.3rem;">Press <strong>space</strong> to start the video</p>' +
+      '</div></div>',
+    choices: [" "]
+  };
+  
+  // S example video (no response required)
+  var example_s_video = {
+    type: jsPsychVideoKeyboardResponse,
+    data: { screen_name: "Example S Video" },
+    stimulus: [CONFIG.condition + '_S_example.mp4'],
+    prompt: '<style>#jspsych-video-keyboard-response-stimulus { ' +
+            'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); ' +
+            '}</style>',
+    width: 500,
+    height: 500,
+    choices: "NO_KEYS",
+    trial_ends_after_video: true,
+    response_ends_trial: false
+  };
+  
+  // 1 second delay after S example
+  var example_s_delay = {
+    type: jsPsychHtmlKeyboardResponse,
+    data: { screen_name: "Example S Delay" },
+    stimulus: '',
+    choices: "NO_KEYS",
+    trial_duration: 1000
+  };
+  
+  // Press space to start X example video
+  var example_x_ready = {
+    type: jsPsychHtmlKeyboardResponse,
+    data: { screen_name: "Example X Ready" },
+    stimulus: '<div style="position:fixed; top:0; left:0; width:100vw; height:100vh; ' +
+              'display:flex; align-items:center; justify-content:center;">' +
+      '<div style="text-align:center;">' +
+      '<p style="font-size:1.3rem;">Now, you will see an example of a video that develops into ' +
+      article2 + ' <strong>' + letter2 + '</strong>.</p>' +
+      '<p style="font-size:1.3rem;">Press <strong>space</strong> to start the video</p>' +
+      '</div></div>',
+    choices: [" "]
+  };
+  
+  // X example video (no response required)
+  var example_x_video = {
+    type: jsPsychVideoKeyboardResponse,
+    data: { screen_name: "Example X Video" },
+    stimulus: [CONFIG.condition + '_X_example.mp4'],
+    prompt: '<style>#jspsych-video-keyboard-response-stimulus { ' +
+            'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); ' +
+            '}</style>',
+    width: 500,
+    height: 500,
+    choices: "NO_KEYS",
+    trial_ends_after_video: true,
+    response_ends_trial: false
+  };
+  
+  // 1 second delay after X example
+  var example_x_delay = {
+    type: jsPsychHtmlKeyboardResponse,
+    data: { screen_name: "Example X Delay" },
+    stimulus: '',
+    choices: "NO_KEYS",
+    trial_duration: 1000
+  };
+  
+  // Combined example videos timeline
+  var example_videos = {
+    timeline: [
+      example_s_ready,
+      example_s_video,
+      example_s_delay,
+      example_x_ready,
+      example_x_video,
+      example_x_delay
+    ]
   };
   
   // -----------------------------------------------------------------
@@ -287,10 +384,10 @@ function createScreens(jsPsych) {
       
       '<p>Your task is to identify which letter the video is progressing towards.</p>' +
       
-      '<p>Press the <strong>' + letter1 + '</strong> key if you believe the video ' +
+      '<p>Press the <strong>' + button1 + '</strong> key if you believe the video ' +
       'is progressing towards ' + article1 + ' <strong>' + letter1 + '</strong>.</p>' +
       
-      '<p>Press the <strong>' + letter2 + '</strong> key if you believe the video ' +
+      '<p>Press the <strong>' + button2 + '</strong> key if you believe the video ' +
       'is progressing towards ' + article2 + ' <strong>' + letter2 + '</strong>.</p>' +
       
       '<p>Your performance depends on both accuracy and speed. You will only be ' +
@@ -345,10 +442,10 @@ function createScreens(jsPsych) {
       
       '<p>Your task is to identify which letter the video is progressing towards.</p>' +
       
-      '<p>Press the <strong>' + letter1 + '</strong> key if you believe the video ' +
+      '<p>Press the <strong>' + button1 + '</strong> key if you believe the video ' +
       'is progressing towards ' + article1 + ' <strong>' + letter1 + '</strong>.</p>' +
       
-      '<p>Press the <strong>' + letter2 + '</strong> key if you believe the video ' +
+      '<p>Press the <strong>' + button2 + '</strong> key if you believe the video ' +
       'is progressing towards ' + article2 + ' <strong>' + letter2 + '</strong>.</p>' +
       
       '<p>Your performance depends on both accuracy and speed. You will only be ' +
@@ -481,6 +578,7 @@ function createScreens(jsPsych) {
     id_entry: id_entry,
     consent_screen: consent_screen,
     experiment_intro: experiment_intro,
+    example_videos: example_videos,
     practice_intro: practice_intro,
     practice_complete: practice_complete,
     actual_intro: actual_intro,

@@ -9,10 +9,10 @@
 // =====================================================================
 
 // ---------------------------------------------------------------------
-// Tellegen Absorption Scale
+// Tellegen Absorption Scale (MODTAS 5-point frequency scale)
 // ---------------------------------------------------------------------
 
-var TELLEGEN_SCALE = ['0 - Never', '1 - Rarely', '2 - Often', '3 - Always'];
+var TELLEGEN_SCALE = ['0 - Never', '1 - At least once', '2 - Occasionally', '3 - Often', '4 - Very often'];
 
 var TELLEGEN_QUESTIONS = [
   { prompt: 'Sometimes I feel and experience things as I did when I was a child.', options: TELLEGEN_SCALE, required: true },
@@ -66,7 +66,7 @@ function createTellegenTrial(jsPsych, saveJsonFile) {
       '<p style="margin-bottom: 2rem;">This questionnaire consists of questions about experiences that you may have had in your life. We are interested in how often you have these experiences. It is important, however, that your answers show how often these experiences happen to you when you are not under the influence of alcohol or drugs.</p>' +
       '</div>',
     questions: TELLEGEN_QUESTIONS,
-    randomize_question_order: false,
+    randomize_question_order: true,
     on_finish: function(data) {
       var end_timestamp = performance.now();
       var start_timestamp = end_timestamp - data.rt;
